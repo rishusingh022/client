@@ -142,7 +142,6 @@ export function ChatPanel({
 
         <div className="grid gap-4 sm:pb-4">
           <PromptForm input={input} setInput={setInput} />
-          <FooterText className="hidden sm:block" />
         </div>
       </div>
     </div>
