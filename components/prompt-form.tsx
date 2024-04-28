@@ -17,47 +17,24 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { toast } from 'sonner'
-import { useRecordVoice } from '@/lib/hooks/use-to-record-voice'
-import { IconMicrophone } from '@/components/ui/icons'
-
-
-const Microphone = () => {
-  const { startRecording, stopRecording, text } = useRecordVoice();
-  const [isRecording, setIsRecording] = React.useState(false);
-
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    startRecording();
-  };
-
-  const handleStopRecording = () => {
-    setIsRecording(false);
-    stopRecording();
-  };
-
-  return (
-    <div className="flex flex-col justify-center items-center">
-      <button
-        onMouseDown={handleStartRecording}
-        onMouseUp={handleStopRecording}
-        onTouchStart={handleStartRecording}
-        onTouchEnd={handleStopRecording}
-        className="border-none bg-transparent w-10"
-      >
-        <IconMicrophone isRecording={isRecording} />
-      </button>
-      <p>{isRecording ? "Recording started" : text}</p>
-    </div>
-  );
-};
-
+import Microphone from './microphone'
 
 export function PromptForm({
   input,
-  setInput
+  setInput,
+  setIsRecording,
+  startRecording,
+  stopRecording,
+  text,
+  isRecording
 }: {
   input: string
   setInput: (value: string) => void
+  startRecording: () => void
+  stopRecording: () => void
+  text: string
+  isRecording: boolean
+  setIsRecording: any
 }) {
   const { formRef, onKeyDown } = useEnterSubmit()
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
@@ -152,23 +129,31 @@ export function PromptForm({
           }
         }}
       />
-      <div className='flex justify-center items-center m-2 p-2'><Microphone/></div>
+      <div className="flex justify-center items-center m-2 p-2">
+        <Microphone
+          isRecording={isRecording}
+          setIsRecording={setIsRecording}
+          startRecording={startRecording}
+          stopRecording={stopRecording}
+          text={text}
+        />
+      </div>
 
       <div className="relative flex max-h-60 w-full grow flex-row overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">
         <Tooltip>
           <TooltipTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
-          onClick={() => {
-            fileRef.current?.click()
-          }}
-        >
-          <IconPlus />
-          <span className="sr-only">New Chat</span>
-        </Button>
-        </TooltipTrigger>
+            <Button
+              variant="outline"
+              size="icon"
+              className="absolute left-4 top-[14px] size-8 rounded-full bg-background p-0 sm:left-4"
+              onClick={() => {
+                fileRef.current?.click()
+              }}
+            >
+              <IconPlus />
+              <span className="sr-only">New Chat</span>
+            </Button>
+          </TooltipTrigger>
           <TooltipContent>Add Attachments</TooltipContent>
         </Tooltip>
         <Textarea
