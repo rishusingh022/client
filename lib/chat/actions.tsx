@@ -92,7 +92,6 @@ async function describeImage(imageBase64: string) {
 
         const result = await model.generateContent([prompt, image])
         text = result.response.text()
-        console.log(text)
       }
 
       spinnerStream.done(null)
@@ -152,7 +151,6 @@ async function submitUserMessage(content: string) {
     role: message.role,
     content: message.content
   }))
-  // console.log(history)
 
   const textStream = createStreamableValue('')
   const spinnerStream = createStreamableUI(<SpinnerMessage />)
@@ -246,13 +244,13 @@ async function submitUserMessage(content: string) {
         },
         system: `\
       You are a friendly assistant that helps the user with booking flights to destinations that are based on a list of books. You can you give travel recommendations based on the books, and will continue to help the user book a flight to their destination.
-  
-      The date today is ${format(new Date(), 'd LLLL, yyyy')}. 
+
+      The date today is ${format(new Date(), 'd LLLL, yyyy')}.
       The user's current location is San Francisco, CA, so the departure city will be San Francisco and airport will be San Francisco International Airport (SFO). The user would like to book the flight out on May 12, 2024.
 
       List United Airlines flights only.
-      
-      Here's the flow: 
+
+      Here's the flow:
         1. List holiday destinations based on a collection of books.
         2. List flights to destination.
         3. Choose a flight.

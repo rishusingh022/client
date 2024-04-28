@@ -17,6 +17,40 @@ import {
 import { useEnterSubmit } from '@/lib/hooks/use-enter-submit'
 import { nanoid } from 'nanoid'
 import { toast } from 'sonner'
+import { useRecordVoice } from '@/lib/hooks/use-to-record-voice'
+import { IconMicrophone } from '@/components/ui/icons'
+
+
+const Microphone = () => {
+  const { startRecording, stopRecording, text } = useRecordVoice();
+  const [isRecording, setIsRecording] = React.useState(false);
+
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    startRecording();
+  };
+
+  const handleStopRecording = () => {
+    setIsRecording(false);
+    stopRecording();
+  };
+
+  return (
+    <div className="flex flex-col justify-center items-center">
+      <button
+        onMouseDown={handleStartRecording}
+        onMouseUp={handleStopRecording}
+        onTouchStart={handleStartRecording}
+        onTouchEnd={handleStopRecording}
+        className="border-none bg-transparent w-10"
+      >
+        <IconMicrophone isRecording={isRecording} />
+      </button>
+      <p>{isRecording ? "Recording started" : text}</p>
+    </div>
+  );
+};
+
 
 export function PromptForm({
   input,
@@ -118,9 +152,11 @@ export function PromptForm({
           }
         }}
       />
-      <div className="relative flex max-h-60 w-full grow flex-col overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">
-        {/* <Tooltip>
-          <TooltipTrigger asChild> */}
+      <div className='flex justify-center items-center m-2 p-2'><Microphone/></div>
+
+      <div className="relative flex max-h-60 w-full grow flex-row overflow-hidden bg-zinc-100 px-12 sm:rounded-full sm:px-12">
+        <Tooltip>
+          <TooltipTrigger asChild>
         <Button
           variant="outline"
           size="icon"
@@ -132,9 +168,9 @@ export function PromptForm({
           <IconPlus />
           <span className="sr-only">New Chat</span>
         </Button>
-        {/* </TooltipTrigger>
+        </TooltipTrigger>
           <TooltipContent>Add Attachments</TooltipContent>
-        </Tooltip> */}
+        </Tooltip>
         <Textarea
           ref={inputRef}
           tabIndex={0}
@@ -150,7 +186,7 @@ export function PromptForm({
           value={input}
           onChange={e => setInput(e.target.value)}
         />
-        <div className="absolute right-4 top-[13px] sm:right-4">
+        <div className="absolute right-4 top-[13px] sm:right-4 flex justify-center items-center">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button

@@ -87,3 +87,38 @@ export const getMessageFromCode = (resultCode: string) => {
       return 'Logged in!'
   }
 }
+
+export const blobToBase64 = (blob: Blob, callback: (base64data: string) => void) => {
+  const reader = new FileReader();
+  reader.onload = function () {
+    const base64data = (reader.result as string)?.split(",")[1];
+    callback(base64data);
+  };
+  reader.readAsDataURL(blob);
+};
+
+
+const getPeakLevel = (analyzer: AnalyserNode) => {
+  const array = new Uint8Array(analyzer.fftSize);
+  analyzer.getByteTimeDomainData(array);
+  return (
+    array.reduce((max, current) => Math.max(max, Math.abs(current - 127)), 0) /
+    128
+  );
+};
+
+// parameters stream, isRecording, callback
+export const createMediaStream = (stream : MediaStream, isRecording? : boolean, callback? : (peak: number) => void) => {
+  const context = new AudioContext();
+  const source = context.createMediaStreamSource(stream);
+  const analyzer = context.createAnalyser();
+  source.connect(analyzer);
+  const tick = () => {
+    const peak = getPeakLevel(analyzer);
+    if (isRecording && callback) {
+      callback(peak);
+      requestAnimationFrame(tick);
+    }
+  };
+  tick();
+};

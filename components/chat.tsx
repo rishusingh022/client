@@ -14,6 +14,7 @@ import { useAIState, useUIState } from 'ai/rsc'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { title, subtitle, description } from '@/lib/mocks/emptyScreen'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -68,7 +69,7 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
         {messages.length ? (
           <ChatList messages={messages} isShared={false} session={session} />
         ) : (
-          <EmptyScreen />
+          <EmptyScreen title={title} subtitle={subtitle} description={description} />
         )}
         <div className="h-px w-full" ref={visibilityRef} />
       </div>
