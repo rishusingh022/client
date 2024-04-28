@@ -21,6 +21,11 @@ export interface ChatPanelProps {
   setInput: (value: string) => void
   isAtBottom: boolean
   scrollToBottom: () => void
+  startRecording: () => void
+  stopRecording: () => void
+  text: string
+  isRecording: boolean
+  setIsRecording: any
 }
 
 export function ChatPanel({
@@ -29,7 +34,12 @@ export function ChatPanel({
   input,
   setInput,
   isAtBottom,
-  scrollToBottom
+  scrollToBottom,
+  isRecording,
+  setIsRecording,
+  startRecording,
+  stopRecording,
+  text
 }: ChatPanelProps) {
   const [aiState] = useAIState()
   const [messages, setMessages] = useUIState<typeof AI>()
@@ -38,14 +48,17 @@ export function ChatPanel({
 
   const exampleMessages = [
     {
-      heading: 'What is the ideal customer profile for your product or service?',
+      heading:
+        'What is the ideal customer profile for your product or service?',
       subheading: '(Who are you trying to reach?)',
-      message: 'Tell me about the typical customer who would benefit most from your offering.'
+      message:
+        'Tell me about the typical customer who would benefit most from your offering.'
     },
     {
-      heading: 'Do you have any existing sales materials you\'d like to share?',
+      heading: "Do you have any existing sales materials you'd like to share?",
       subheading: '(Upload brochures, presentations, etc.)',
-      message: 'Would you like to upload any sales collateral to help me tailor the proposal?'
+      message:
+        'Would you like to upload any sales collateral to help me tailor the proposal?'
     }
   ]
 
@@ -141,7 +154,15 @@ export function ChatPanel({
         ) : null}
 
         <div className="grid gap-4 sm:pb-4">
-          <PromptForm input={input} setInput={setInput} />
+          <PromptForm
+            input={input}
+            setInput={setInput}
+            isRecording={isRecording}
+            setIsRecording={setIsRecording}
+            startRecording={startRecording}
+            stopRecording={stopRecording}
+            text={text}
+          />
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ interface UseRecordVoiceProps {
   startRecording: () => void;
   stopRecording: () => void;
   text: string;
+  setText: any;
 }
 
 type TextState = string;
@@ -90,5 +91,5 @@ export const useRecordVoice = (): UseRecordVoiceProps => {
     }
   }, []);
 
-  return { recording, startRecording, stopRecording, text };
+  return { recording, startRecording, stopRecording, text, setText };
 };

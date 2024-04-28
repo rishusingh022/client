@@ -12,9 +12,10 @@ import { Session } from '@/lib/types'
 import { cn } from '@/lib/utils'
 import { useAIState, useUIState } from 'ai/rsc'
 import { usePathname, useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { title, subtitle, description } from '@/lib/mocks/emptyScreen'
+import { useRecordVoice } from '@/lib/hooks/use-to-record-voice'
 
 export interface ChatProps extends React.ComponentProps<'div'> {
   initialMessages?: Message[]
@@ -31,6 +32,25 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
   const [aiState] = useAIState()
 
   const [_, setNewChatId] = useLocalStorage('newChatId', id)
+
+  const formRef = useRef<HTMLFormElement>(null)
+
+  const { startRecording, stopRecording, text, setText } = useRecordVoice()
+  const [isRecording, setIsRecording] = useState(false)
+
+  useEffect(() => {
+    if(!isRecording && text.length > 0){
+      console.log("c 2")
+      setInput(pre => {
+        console.log("_____", {pre, text})
+        return pre + text
+      })
+      // formRef.current?.requestSubmit()
+      // setText("");
+      // setInput("");
+    }
+    console.log("<<>>",{text, input})
+  }, [isRecording, text])
 
   useEffect(() => {
     if (session?.user) {
@@ -79,6 +99,11 @@ export function Chat({ id, className, session, missingKeys }: ChatProps) {
         setInput={setInput}
         isAtBottom={isAtBottom}
         scrollToBottom={scrollToBottom}
+        isRecording={isRecording}
+        setIsRecording={setIsRecording}
+        startRecording={startRecording}
+        stopRecording={stopRecording}
+        text={text}
       />
     </div>
   )
